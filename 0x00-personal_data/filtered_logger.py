@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+file: filtered_logger.py
+
+A module that provides a logger that filters out sensitive data
+
+Author: Malik Hussein
+"""
 
 from typing import List
 import re
@@ -9,15 +16,18 @@ from mysql.connector import connection
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
-def filter_datum(fields: List[str], redaction: str, message: str, separator: str) -> str:
+def filter_datum(fields: List[str], redaction: str,
+                 message: str, separator: str) -> str:
     """
     Filter a log message by replacing sensitive data
     """
     temp = message
     for field in fields:
-        temp = re.sub(field + "=.*?" + separator, field + "=" + redaction + separator, temp)
+        temp = re.sub(field + "=.*?" + separator,
+                      field + "=" + redaction + separator, temp)
 
     return temp
+
 
 class RedactingFormatter(logging.Formatter):
     """
@@ -33,10 +43,19 @@ class RedactingFormatter(logging.Formatter):
         self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
-        return filter_datum(self.fields, self.REDACTION, super(RedactingFormatter, self).format(record), self.SEPARATOR)
-    
+        return filter_datum(self.fields,
+                            self.REDACTION,
+                            super(RedactingFormatter, self).format(record),
+                            self.SEPARATOR
+                            )
+
 
 def get_logger() -> logging.Logger:
+    """
+    Returns a logging.Logger object that logs at the INFO level
+    and writes to stdout. The logger is configured to redact
+    sensitive data from the log output.
+    """
     logger = logging.getLogger('user_data')
     logger.setLevel(logging.INFO)
     logger.propagate = False
@@ -47,7 +66,11 @@ def get_logger() -> logging.Logger:
 
     return logger
 
+
 def get_db() -> connection.MySQLConnection:
+    """
+    Returns a connection object to the MySQL database.
+    """
     username = environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
     password = environ.get('PERSONAL_DATA_DB_PASSWORD', '')
     db_host = environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
@@ -65,6 +88,10 @@ def get_db() -> connection.MySQLConnection:
 
 def main() -> None:
 
+    """
+    Connects to a MySQL database and logs each user's information to stdout,
+    redacting sensitive fields in the log output.
+    """
     db = get_db()
     cursor = db.cursor()
 
@@ -79,7 +106,7 @@ def main() -> None:
             'last_login={}; user_agent={};'
         fields = fields.format(row[0], row[1], row[2], row[3],
                                row[4], row[5], row[6], row[7])
-        
+
         logger.info(fields)
 
     cursor.close()
