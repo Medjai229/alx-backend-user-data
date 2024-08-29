@@ -8,6 +8,7 @@ from mysql.connector import connection
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
+
 def filter_datum(fields: List[str], redaction: str, message: str, separator: str) -> str:
     """
     Filter a log message by replacing sensitive data
@@ -60,3 +61,30 @@ def get_db() -> connection.MySQLConnection:
     )
 
     return connector
+
+
+def main() -> None:
+
+    db = get_db()
+    cursor = db.cursor()
+
+    query = ('SELECT * FROM users;')
+    cursor.execute(query)
+    fetched_data = cursor.fetchall()
+
+    logger = get_logger()
+
+    for row in fetched_data:
+        fields = 'name={}; email={}; phone={}; ssn={}; password={}; ip={}; '\
+            'last_login={}; user_agent={};'
+        fields = fields.format(row[0], row[1], row[2], row[3],
+                               row[4], row[5], row[6], row[7])
+        
+        logger.info(fields)
+
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main()
