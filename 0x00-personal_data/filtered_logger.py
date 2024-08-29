@@ -38,10 +38,16 @@ class RedactingFormatter(logging.Formatter):
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
+        """
+        Constructor for RedactingFormatter class
+        """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
+        """
+        Formats a log record and filters out sensitive data
+        """
         return filter_datum(self.fields,
                             self.REDACTION,
                             super(RedactingFormatter, self).format(record),
