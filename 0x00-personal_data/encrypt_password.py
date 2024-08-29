@@ -23,4 +23,4 @@ def is_valid(hashed_password: bytes, password: str) -> bool:
     """
     Verifies a given password against a hashed password.
     """
-    return bcrypt.checkpw(b'password', hashed_password)
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
