@@ -63,7 +63,7 @@ class BasicAuth(Auth):
 
     def user_object_from_credentials(self,
                                      user_email: str,
-                                     user_pwd: str) -> User:
+                                     user_pwd: str) -> USR:
         """ Returns the User object corresponding to
         the given email address and password.
         """
@@ -72,12 +72,14 @@ class BasicAuth(Auth):
         if user_pwd is None or type(user_pwd) is not str:
             return None
 
-        users = User.search({'email': user_email})
-        if not users:
-            return None
+        try:
+            users = User.search({'email': user_email})
 
-        for user in users:
-            if user.is_valid_password(user_pwd):
-                return user
+            for user in users:
+                if user.is_valid_password(user_pwd):
+                    return user
+
+        except Exception:
+            return None
 
         return None
