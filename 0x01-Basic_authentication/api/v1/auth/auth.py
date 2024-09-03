@@ -32,9 +32,14 @@ class Auth():
         return True
 
     def authorization_header(self, request=None) -> str:
-        """ public method
+        """ Returns the value of the Authorization header from a request
         """
-        return None
+        if request is None:
+            return None
+        if request.headers.get('Authorization') is None:
+            return None
+
+        return request.headers.get('Authorization')
 
     def current_user(self, request=None) -> USR:
         """ public method
