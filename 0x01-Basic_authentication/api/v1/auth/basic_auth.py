@@ -63,7 +63,7 @@ class BasicAuth(Auth):
 
     def user_object_from_credentials(self,
                                      user_email: str,
-                                     user_pwd: str) -> USR:
+                                     user_pwd: str) -> User:
         """ Returns the User object corresponding to
         the given email address and password.
         """
