@@ -85,6 +85,9 @@ class BasicAuth(Auth):
         return None
 
     def current_user(self, request=None) -> USR:
+        """
+        Overwrite current_user method from Auth class
+        """
         auth = self.authorization_header(request)
         encoded_base64 = self.extract_base64_authorization_header(auth)
         decoded_base64 = self.decode_base64_authorization_header(
