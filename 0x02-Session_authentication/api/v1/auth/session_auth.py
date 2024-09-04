@@ -4,6 +4,7 @@
 
 from api.v1.auth.auth import Auth
 from uuid import uuid4
+from api.v1.views.users import User
 
 
 class SessionAuth(Auth):
@@ -35,3 +36,15 @@ class SessionAuth(Auth):
 
         user_id = self.user_id_by_session_id.get(session_id)
         return user_id
+
+    def current_user(self, request=None):
+        """ Retrieves the User instance based on a Request object
+        """
+        session_id = self.create_session(request)
+
+        if session_id is None:
+            return None
+
+        user_id = self.user_id_for_session_id(session_id)
+
+        return User.get(user_id)
