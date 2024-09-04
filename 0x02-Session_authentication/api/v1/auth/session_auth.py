@@ -40,7 +40,7 @@ class SessionAuth(Auth):
     def current_user(self, request=None):
         """ Retrieves the User instance based on a Request object
         """
-        session_id = self.create_session(request)
+        session_id = self.session_cookie(request)
 
         if session_id is None:
             return None
