@@ -11,6 +11,8 @@ class SessionDBAuth(SessionExpAuth):
     """ DB Session Authentication class
     """
     def create_session(self, user_id=None):
+        """ Creates a new session for a given user_id
+        """
         session_id = super().create_session(user_id)
 
         if session_id is None:
@@ -23,6 +25,8 @@ class SessionDBAuth(SessionExpAuth):
         return session_id
 
     def user_id_for_session_id(self, session_id=None):
+        """ Returns a User ID based on a Session ID
+        """
         if session_id is None:
             return None
 
@@ -42,6 +46,9 @@ class SessionDBAuth(SessionExpAuth):
         return user_session.user_id
 
     def destroy_session(self, request=None):
+        """ Destroys the user session by deleting the session_id
+        from the user_id_by_session_id dictionary
+        """
         if request is None:
             return False
 
