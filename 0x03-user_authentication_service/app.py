@@ -8,6 +8,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def status() -> str:
+    """ GET /
+    """
     return jsonify({"message": "Bienvenue"})
 
 
